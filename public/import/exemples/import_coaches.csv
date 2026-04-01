@@ -1,0 +1,6 @@
+coach_id,first_name,last_name,email,phone,coach_type,years_of_experience,status,city,address,profile_picture
+C-001,John,Doe,john.doe@example.com,+1234567890,Personal Coach,5,Active,New York,123 Main St,
+C-002,Jane,Smith,jane.smith@example.com,+1234567891,Yoga Coach,8,Active,Los Angeles,456 Oak Ave,
+C-003,Mike,Johnson,mike.johnson@example.com,+1234567892,Group Coach,3,Active,Chicago,789 Pine St,
+C-004,Sarah,Wilson,sarah.wilson@example.com,+1234567893,Nutritionist,6,Active,Miami,321 Beach Rd,
+C-005,David,Brown,david.brown@example.com,+1234567894,Pilates Coach,4,Active,Seattle,654 Mountain Dr, 

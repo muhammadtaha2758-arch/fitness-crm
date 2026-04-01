@@ -1,20 +1,54 @@
 <template>
-    <div class="auth-layout-wrap login-background">
+    <div class="login-page">
         <b-toaster name="b-toaster-top-right" />
-        <div class="auth-content">
-            <div class="card o-hidden">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="p-4">
-                            <div class="auth-logo text-center">
-                                <img :src="'/images/logo.png'" />
-                            </div>
-                            <h1 style="text-align: center" class="text-25">
-                                Login
-                            </h1>
-                            <p class="text-muted text-center">
-                                Welcome to Thor Strength Fitness
+        <div class="login-page__bg" aria-hidden="true" />
+        <div class="container login-page__container py-4 py-md-5">
+            <div
+                class="login-page__shell card border-0 shadow-lg mx-auto overflow-hidden"
+            >
+                <div class="row no-gutters">
+                    <div
+                        class="col-lg-6 login-page__brand d-none d-lg-flex flex-column justify-content-center p-5 text-white"
+                    >
+                        <div class="login-page__brand-inner">
+                            <p
+                                class="login-page__eyebrow text-uppercase font-weight-semibold mb-2"
+                            >
+                                Thor Strength Fitness
                             </p>
+                            <h2 class="login-page__headline font-weight-bold mb-3">
+                                Train smarter. Manage easier.
+                            </h2>
+                            <p class="login-page__lead mb-0">
+                                Access your gym dashboard to manage members,
+                                schedules, workouts, and billing in one place.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 bg-white">
+                        <div class="login-page__form-wrap p-4 p-md-5">
+                            <div class="text-center mb-4">
+                                <div
+                                    class="login-page__logo-wrap d-inline-flex align-items-center justify-content-center mb-3"
+                                >
+                                    <img
+                                        src="/images/logo.png"
+                                        alt="Thor Strength Fitness"
+                                        class="login-page__logo img-fluid"
+                                    />
+                                </div>
+                                <h1 class="h3 font-weight-bold text-dark mb-1">
+                                    {{
+                                        $t("SignIn") ||
+                                            $t("Login") ||
+                                            "Sign in"
+                                    }}
+                                </h1>
+                                <p class="text-muted small mb-0">
+                                    Welcome to Thor Strength Fitness
+                                </p>
+                            </div>
+
                             <validation-observer ref="submit_login">
                                 <b-form @submit.prevent="Submit_Login">
                                     <validation-provider
@@ -23,8 +57,12 @@
                                         v-slot="validationContext"
                                     >
                                         <b-form-group
-                                            label="Email Address"
-                                            class="text-12"
+                                            :label="
+                                                $t('Email_Address') ||
+                                                    'Email address'
+                                            "
+                                            label-class="small font-weight-semibold text-secondary mb-1"
+                                            class="mb-3"
                                         >
                                             <b-form-input
                                                 :state="
@@ -33,16 +71,19 @@
                                                     )
                                                 "
                                                 aria-describedby="Email-feedback"
-                                                class="form-control-rounded"
+                                                class="login-page__input"
                                                 type="email"
                                                 v-model="email"
-                                            ></b-form-input>
+                                                autocomplete="username"
+                                                placeholder="you@example.com"
+                                            />
                                             <b-form-invalid-feedback
                                                 id="Email-feedback"
-                                                >{{
-                                                    validationContext.errors[0]
-                                                }}</b-form-invalid-feedback
                                             >
+                                                {{
+                                                    validationContext.errors[0]
+                                                }}
+                                            </b-form-invalid-feedback>
                                         </b-form-group>
                                     </validation-provider>
 
@@ -52,26 +93,44 @@
                                         v-slot="validationContext"
                                     >
                                         <b-form-group
-                                            label="Password"
-                                            class="text-12"
+                                            :label="
+                                                $t('password') ||
+                                                    $t('Password') ||
+                                                    'Password'
+                                            "
+                                            label-class="small font-weight-semibold text-secondary mb-1"
+                                            class="mb-4"
                                         >
-                                            <div class="password-input-wrapper">
+                                            <div class="login-page__password-wrap">
                                                 <b-form-input
-                                                    style="color: #252525"
                                                     :state="
                                                         getValidationState(
                                                             validationContext
                                                         )
                                                     "
                                                     aria-describedby="Password-feedback"
-                                                    class="form-control-rounded"
-                                                    :type="showPassword ? 'text' : 'password'"
+                                                    class="login-page__input login-page__input--password"
+                                                    :type="
+                                                        showPassword
+                                                            ? 'text'
+                                                            : 'password'
+                                                    "
                                                     v-model="password"
-                                                ></b-form-input>
+                                                    autocomplete="current-password"
+                                                    placeholder="••••••••"
+                                                />
                                                 <button
                                                     type="button"
-                                                    class="password-toggle-btn"
-                                                    @click="togglePasswordVisibility"
+                                                    class="login-page__toggle btn btn-link p-0"
+                                                    @click="
+                                                        togglePasswordVisibility
+                                                    "
+                                                    :aria-pressed="showPassword"
+                                                    :aria-label="
+                                                        showPassword
+                                                            ? 'Hide password'
+                                                            : 'Show password'
+                                                    "
                                                     tabindex="-1"
                                                 >
                                                     <i
@@ -85,36 +144,49 @@
                                             </div>
                                             <b-form-invalid-feedback
                                                 id="Password-feedback"
-                                                >{{
-                                                    validationContext.errors[0]
-                                                }}</b-form-invalid-feedback
                                             >
+                                                {{
+                                                    validationContext.errors[0]
+                                                }}
+                                            </b-form-invalid-feedback>
                                         </b-form-group>
                                     </validation-provider>
 
                                     <b-button
-                                        style="color: #ffffff !important"
                                         type="submit"
-                                        tag="button"
-                                        class="btn-rounded btn-block mt-2"
-                                        variant="primary mt-2"
+                                        variant="primary"
+                                        class="login-page__submit btn-lg btn-block font-weight-semibold"
                                         :disabled="loading"
-                                        >SignIn</b-button
                                     >
-                                    <div v-once class="typo__p" v-if="loading">
+                                        {{
+                                            $t("SignIn") ||
+                                                $t("Login") ||
+                                                "Sign in"
+                                        }}
+                                    </b-button>
+                                    <div
+                                        v-once
+                                        class="text-center"
+                                        v-if="loading"
+                                    >
                                         <div
-                                            class="spinner sm spinner-primary mt-3"
-                                        ></div>
+                                            class="spinner-border spinner-border-sm text-primary mt-3"
+                                            role="status"
+                                        >
+                                            <span class="sr-only">
+                                                {{ $t("Loading") || "Loading" }}
+                                            </span>
+                                        </div>
                                     </div>
                                 </b-form>
                             </validation-observer>
 
-                            <div class="mt-3 text-center">
-                                <a class="hover-button"
-                                    style="color: #252525"
+                            <div class="mt-4 text-center">
+                                <a
+                                    class="login-page__forgot small font-weight-medium"
                                     href="/password/reset"
                                 >
-                                    <u>Forgot_Password</u>
+                                    {{ $t("Forgot_Password") || "Forgot password?" }}
                                 </a>
                             </div>
                         </div>
@@ -125,7 +197,7 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import NProgress from "nprogress";
 
 export default {
@@ -152,7 +224,8 @@ export default {
                 if (!success) {
                     this.makeToast(
                         "danger",
-                        this.$t("Please_fill_the_form_correctly") || "Please fill in all fields correctly.",
+                        this.$t("Please_fill_the_form_correctly") ||
+                            "Please fill in all fields correctly.",
                         this.$t("Failed") || "Failed"
                     );
                 } else {
@@ -181,15 +254,16 @@ export default {
                     {
                         baseURL: "",
                         headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
                         },
                     }
                 )
                 .then((response) => {
                     this.makeToast(
                         "success",
-                        this.$t("Login_Successful") || "You have signed in successfully.",
+                        this.$t("Login_Successful") ||
+                            "You have signed in successfully.",
                         this.$t("Success") || "Success"
                     );
 
@@ -203,10 +277,14 @@ export default {
                     this.loading = false;
 
                     const failedTitle = this.$t("Failed") || "Failed";
-                    let errorMessage = this.$t("Incorrect_Login") || "Invalid email or password.";
+                    let errorMessage =
+                        this.$t("Incorrect_Login") ||
+                        "Invalid email or password.";
                     let errorTitle = failedTitle;
                     const normalizeAuthError = (message) => {
-                        const fallback = this.$t("Incorrect_Login") || "Invalid email or password.";
+                        const fallback =
+                            this.$t("Incorrect_Login") ||
+                            "Invalid email or password.";
                         if (!message || typeof message !== "string") {
                             return fallback;
                         }
@@ -231,32 +309,51 @@ export default {
 
                         if (status === 403) {
                             // Access denied - show specific message about using mobile app
-                            errorMessage = data.message ||
+                            errorMessage =
+                                data.message ||
                                 "Access denied. This login is for administrators only. Members and coaches should use the mobile app. Please download the app to access your account.";
                             errorTitle = "Access Denied";
                         } else if (status === 429) {
                             // Too many login attempts
-                            const firstError = data.errors && typeof data.errors === "object"
-                                ? Object.values(data.errors)[0]
-                                : null;
-                            errorMessage = (Array.isArray(firstError) && firstError[0]) || data.message ||
+                            const firstError =
+                                data.errors && typeof data.errors === "object"
+                                    ? Object.values(data.errors)[0]
+                                    : null;
+                            errorMessage =
+                                (Array.isArray(firstError) && firstError[0]) ||
+                                data.message ||
                                 "Too many login attempts. Please try again in a few minutes.";
                             errorTitle = "Too Many Attempts";
-                        } else if (status === 422 && data.errors && typeof data.errors === "object") {
+                        } else if (
+                            status === 422 &&
+                            data.errors &&
+                            typeof data.errors === "object"
+                        ) {
                             // Validation (e.g. wrong credentials): prefer specific error over generic "Validation failed"
                             const firstError = Object.values(data.errors)[0];
-                            if (Array.isArray(firstError) && firstError.length > 0) {
+                            if (
+                                Array.isArray(firstError) &&
+                                firstError.length > 0
+                            ) {
                                 errorMessage = normalizeAuthError(firstError[0]);
                             } else if (typeof firstError === "string") {
                                 errorMessage = normalizeAuthError(firstError);
                             } else {
-                                errorMessage = normalizeAuthError(data.message || errorMessage);
+                                errorMessage = normalizeAuthError(
+                                    data.message || errorMessage
+                                );
                             }
                         } else if (data.message) {
                             errorMessage = normalizeAuthError(data.message);
-                        } else if (data.errors && typeof data.errors === "object") {
+                        } else if (
+                            data.errors &&
+                            typeof data.errors === "object"
+                        ) {
                             const firstError = Object.values(data.errors)[0];
-                            if (Array.isArray(firstError) && firstError.length > 0) {
+                            if (
+                                Array.isArray(firstError) &&
+                                firstError.length > 0
+                            ) {
                                 errorMessage = normalizeAuthError(firstError[0]);
                             } else if (typeof firstError === "string") {
                                 errorMessage = normalizeAuthError(firstError);
@@ -268,14 +365,18 @@ export default {
 
                     // Fallback for generic login failure
                     if (!errorMessage || errorMessage.trim() === "") {
-                        errorMessage = "Unable to login. Please check your email and password and try again.";
+                        errorMessage =
+                            "Unable to login. Please check your email and password and try again.";
                     }
                     // If server sent generic "Validation failed", show a clear login message
                     if (
-                        errorMessage.trim().toLowerCase() === "validation failed" ||
+                        errorMessage.trim().toLowerCase() ===
+                            "validation failed" ||
                         errorMessage.trim().toLowerCase() === "auth.failed"
                     ) {
-                        errorMessage = this.$t("Incorrect_Login") || "Invalid email or password. Please try again.";
+                        errorMessage =
+                            this.$t("Incorrect_Login") ||
+                            "Invalid email or password. Please try again.";
                     }
 
                     this.makeToast("danger", errorMessage, errorTitle);
@@ -292,7 +393,11 @@ export default {
         makeToast(variant, msg, title) {
             const isError = variant === "danger" || variant === "error";
             this.$root.$bvToast.toast(msg, {
-                title: title || (isError ? (this.$t("Failed") || "Failed") : this.$t("Success") || "Success"),
+                title:
+                    title ||
+                    (isError
+                        ? this.$t("Failed") || "Failed"
+                        : this.$t("Success") || "Success"),
                 variant: variant,
                 solid: true,
                 toaster: "b-toaster-top-right",
@@ -308,136 +413,144 @@ export default {
 };
 </script>
 
-<style>
-.login-background {
+<style lang="scss" scoped>
+@import "../../../assets/styles/sass/_variables.scss";
+
+.login-page {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-page__bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
     background: url("/images/fitness-login-background.jpg") no-repeat center
-        center fixed;
+        center;
     background-size: cover;
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            135deg,
+            rgba($heading-dark, 0.82) 0%,
+            rgba($gray-900, 0.55) 50%,
+            rgba($primary, 0.35) 100%
+        );
+    }
 }
 
-.auth-layout-wrap {
-    background-color: transparent !important;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.login-page__container {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
 }
 
-.card.o-hidden {
-    background-color: #ffffff;
-    color: #333;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+.login-page__shell {
+    border-radius: $border-radius-lg;
 }
 
-.btn-primary {
-    background-color: #ff4040 !important;
-    border-color: #ff4040 !important;
-    color: #fff !important;
+.login-page__brand {
+    background: linear-gradient(
+        160deg,
+        mix(black, $primary, 22%) 0%,
+        $primary 45%,
+        mix(black, $primary, 12%) 100%
+    );
 }
 
-.btn-primary:hover {
-    background-color: #ff4040 !important;
-    border-color: #ff4040 !important;
+.login-page__eyebrow {
+    letter-spacing: $letter-spacing-sm;
+    opacity: 0.92;
+    font-size: $font-size-xs;
 }
 
-.form-control-rounded {
-    color: #252525 !important;
-    border-radius: 20px;
-    border: 1px solid #ccc;
+.login-page__headline {
+    font-size: $font-size-xxl;
+    line-height: $line-height-lg;
 }
 
-.form-control-rounded:focus {
-    border-color: #ff4040;
-    box-shadow: 0 0 0 0.2rem rgba(255, 64, 64, 0.25);
+.login-page__lead {
+    font-size: $font-size-md;
+    line-height: $line-height-lg;
+    opacity: 0.95;
 }
 
-a.text-muted {
-    color: #252525 !important;
+.login-page__logo-wrap {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: $border-radius-md;
+    background-color: $gray-100;
+    border: $border-width-sm $border-style-solid $gray-200;
 }
 
-a.text-muted:hover {
-    color: #ff4040 !important;
-}
-
-  .hover-button:hover {
-    color: #ff4040 !important;
-  }
-
-.password-input-wrapper {
-    position: relative !important;
-    width: 100%;
-    display: block;
-}
-
-.password-input-wrapper .form-control-rounded,
-.password-input-wrapper input.form-control-rounded,
-.password-input-wrapper .form-control {
-    padding-right: 50px !important;
-    width: 100% !important;
-}
-
-.password-toggle-btn {
-    position: absolute !important;
-    right: 15px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    background: transparent !important;
-    border: none !important;
-    color: #252525 !important;
-    cursor: pointer;
-    padding: 8px !important;
-    z-index: 1000 !important;
-    outline: none !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
+.login-page__logo {
+    max-height: 2.75rem;
     width: auto;
-    min-width: 36px;
-    height: 36px;
-    margin: 0 !important;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    transition: all 0.2s ease;
+}
+
+.login-page__form-wrap ::v-deep .form-group {
+    margin-bottom: 0;
+}
+
+.login-page__input {
+    border-radius: $border-radius-md;
+    border: $border-width-sm solid $gray-300;
+    padding: $padding-sm $padding-md;
+    min-height: 2.75rem;
+    color: $heading;
+
+    &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 0.2rem rgba($primary, 0.2);
+    }
+}
+
+.login-page__password-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.login-page__input--password {
+    padding-right: 2.75rem;
+}
+
+.login-page__toggle {
+    position: absolute;
+    right: $padding-xs;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-muted !important;
+    text-decoration: none !important;
     line-height: 1;
-    visibility: visible !important;
-    opacity: 1 !important;
+
+    &:hover {
+        color: $primary !important;
+    }
+
+    &:focus {
+        box-shadow: none;
+    }
 }
 
-.password-toggle-btn:hover {
-    color: #ff4040 !important;
-    background-color: rgba(255, 64, 64, 0.1) !important;
+.login-page__submit {
+    border-radius: $border-radius-md;
+    padding-top: $padding-sm;
+    padding-bottom: $padding-sm;
 }
 
-.password-toggle-btn i {
-    font-size: 18px;
-    line-height: 1;
-    display: inline-block !important;
-    pointer-events: none;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
+.login-page__forgot {
+    color: $heading;
 
-.password-toggle-btn:hover i {
-    color: #ff4040 !important;
-}
-
-.password-toggle-btn:focus {
-    outline: none !important;
-    border: none !important;
-}
-
-.password-toggle-btn:active {
-    outline: none !important;
-    box-shadow: none !important;
-    border: none !important;
-    background: transparent !important;
-    transform: translateY(-50%) scale(0.95);
+    &:hover {
+        color: $primary;
+        text-decoration: none;
+    }
 }
 </style>
