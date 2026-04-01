@@ -1,0 +1,29 @@
+@use "sass:color";
+
+@function gen-color-opacity-map($color) {
+  $map: (
+   
+    50: color.adjust($color, $lightness: 50%),
+    100: color.adjust($color, $lightness: 40%),
+    200: color.adjust($color, $lightness: 30%),
+    300: color.adjust($color, $lightness: 20%),
+    400: color.adjust($color, $lightness: 10%),
+    500: $color,
+    600: color.adjust($color, $lightness: -10%),
+    700: color.adjust($color, $lightness: -20%),
+    800: color.adjust($color, $lightness: -30%),
+    900: color.adjust($color, $lightness: -40%),
+  );
+  @return $map;
+}
+
+@function gen-color-full-opacity-map($color-map) {
+  $full-color-map: ();
+  @each $name, $value in $color-map {
+    $map: ();
+    $map: map-merge($map, ($name: gen-color-opacity-map($value)) );
+    $full-color-map: map-merge($full-color-map, $map);
+  }
+  @return $full-color-map;
+}
+

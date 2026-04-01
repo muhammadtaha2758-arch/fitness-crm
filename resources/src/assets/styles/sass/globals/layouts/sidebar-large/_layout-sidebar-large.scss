@@ -1,0 +1,593 @@
+@import "../../../../../../assets/styles/sass/_variables.scss";
+@import "header";
+
+.app-admin-wrap {
+  width: 100%;
+}
+
+// ✅ Glassmorphism Mixin for Dark Cyan Background
+@mixin glass-cyan($blur: 12px, $opacity: 0.6) {
+  background: rgba(0, 96, 100, $opacity); // dark cyan base with transparency
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+// ✅ Responsive Typography Mixin
+@mixin responsive-font($desktop, $tablet, $mobile) {
+  font-size: $desktop;
+
+  @media (max-width: 1200px) {
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: $mobile;
+  }
+}
+
+// ====================
+// SIDEBAR & MAIN
+// ====================
+.layout-sidebar-large {
+  .main-content-wrap {
+    float: right;
+    transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+    // padding: 0rem 1.5rem;
+    position: relative;
+    width: 100%; // Default: full width when sidebar is closed
+    // height: calc(100vh - #{$topbar-height});
+
+    // ✅ Responsive font for content
+    @include responsive-font(1rem, 0.95rem, 0.9rem);
+
+    &.sidenav-open {
+      width: calc(100% - #{$sidebar-left-width});
+      margin-left: 0;
+    }
+    
+    // ✅ Responsive adjustments for main content
+    @media (max-width: 1200px) {
+      padding: 0.8rem 0.8rem;
+      
+      &.sidenav-open {
+        width: calc(100% - #{$sidebar-left-width});
+      }
+    }
+    
+    @media (max-width: 768px) {
+      padding: 0.6rem 0.6rem;
+      height: calc(100vh - #{$topbar-height-mobile});
+      
+      &.sidenav-open {
+        width: 100%;
+      }
+    }
+  }
+
+  .sidebar-left-secondary,
+  .sidebar-left {
+    position: fixed;
+    top: $topbar-height;
+    height: calc(100vh - #{$topbar-height});
+    background: linear-gradient(to bottom, #23415a, #0f1c29) !important;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4),
+      0 1px 4px rgba(0, 0, 0, 0.3);
+    
+    // ✅ Force full height on all screen sizes
+    @media (max-height: 600px) {
+      height: calc(100vh - #{$topbar-height});
+    }
+    
+    @media (max-width: 1200px) {
+      height: calc(100vh - #{$topbar-height});
+    }
+    
+    @media (max-width: 768px) {
+      height: calc(100vh - #{$topbar-height-mobile});
+    }
+  }
+
+  .sidebar-left {
+    left: -$sidebar-left-width; // Default: hidden off-screen when closed
+    width: $sidebar-left-width;
+    transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
+    z-index: 1000;
+    
+    &.open {
+      left: 0; // Visible when open
+    }
+
+    .logo {
+      display: none;
+    }
+    
+    // ✅ Remove scrolling completely - make sidebar fit content
+    .ps {
+      height: 100%;
+      overflow: visible !important;
+    }
+    
+    // ✅ Remove scrollbar completely
+    .ps__rail-x,
+    .ps__rail-y {
+      display: none !important;
+    }
+
+    .navigation-left {
+      list-style: none;
+      width: $sidebar-left-width;
+      margin: 5px;
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: visible;
+
+      .nav-item {
+        position: relative;
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        padding: 4px;
+        flex-shrink: 1;
+        flex-grow: 0;
+
+        &:focus,
+        &:active {
+          outline: none;
+        }
+
+        &.lvl1 {
+          text-align: center;
+        }
+
+        &.active {
+          color: $primary;
+          background: transparent !important;
+          .nav-item-hold {
+            color: $primary;
+            background: transparent !important;
+          }
+        }
+
+        // Add hover effect without red border
+        &:hover:not(.active) {
+          background-color: rgba(255, 255, 255, 0.05);
+          
+          .nav-item-hold {
+            color: rgba(255, 255, 255, 0.9);
+          }
+        }
+
+        &:hover.active {
+          .nav-item-hold {
+            color: $primary;
+          }
+        }
+
+        .nav-item-hold {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          padding: 8px 6px;
+          color: #fff;
+
+          // ✅ Responsive font for nav text
+          .nav-text {
+            display: block;
+            font-weight: 400;
+            margin-left: 20px;
+            @include responsive-font(14px, 13px, 12px);
+          }
+
+          &:focus,
+          &:active {
+            outline: none;
+          }
+
+          .nav-icon,
+          .feather {
+            font-size: 16px;
+            height: 18px;
+            width: 18px;
+            display: block;
+            margin: 0;
+            font-weight: 600;
+            flex-shrink: 0;
+
+            // ✅ Reduce icons slightly on mobile
+            @media (max-width: 768px) {
+              font-size: 14px;
+              height: 16px;
+              width: 16px;
+            }
+          }
+
+          a {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            width: 100%;
+          }
+        }
+
+        &.active .triangle {
+          position: absolute;
+          width: 0;
+          height: 0;
+          right: 0;
+          bottom: 0;
+          border-style: solid;
+          border-width: 0 0 15px 15px;
+          border-color: transparent transparent $primary transparent;
+        }
+
+        // ✅ Dropdown submenu styling
+        &.has-submenu {
+          .nav-item-hold {
+            position: relative;
+            
+            .submenu-arrow {
+              margin-left: auto;
+              font-size: 12px;
+              transition: transform 0.3s ease;
+              color: rgba(255, 255, 255, 0.7);
+            }
+          }
+          
+          &.submenu-open {
+            .submenu-arrow {
+              transform: rotate(180deg);
+            }
+          }
+          
+          .inline-submenu {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 4px;
+            margin: 4px 8px;
+            padding: 4px 0;
+            list-style: none;
+            
+            .nav-item {
+              padding: 2px 0;
+              
+              .nav-link {
+                display: flex;
+                align-items: center;
+                padding: 6px 12px;
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                border-radius: 3px;
+                transition: all 0.2s ease;
+                
+                &:hover {
+                  background: rgba(255, 255, 255, 0.1);
+                  color: rgba(255, 255, 255, 0.9);
+                }
+                
+                &.router-link-active {
+                  // background: rgba($primary, 0.2);
+                  color: $primary;
+                }
+                
+                .nav-icon {
+                  font-size: 12px;
+                  margin-right: 8px;
+                  width: 14px;
+                  text-align: center;
+                }
+                
+                .item-name {
+                  font-size: 11px;
+                  font-weight: 400;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // SIDENAV SECONDARY
+  .sidebar-left-secondary {
+    left: calc(-#{$sidebar-left-secondary-width} - #{$side-clearance});
+    z-index: 89;
+    width: $sidebar-left-secondary-width;
+    padding: 8px 0;
+    transition: left 0.24s ease-in-out;
+
+    // ✅ Same dark cyan frosted effect
+    background: linear-gradient(
+      135deg,
+      rgba(0, 96, 100, 0.6) 0%,
+      rgba(0, 96, 100, 0.4) 100%
+    );
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    &.open {
+      left: $sidebar-left-width;
+    }
+
+    .childNav {
+      list-style: none;
+      padding: 0;
+      display: none;
+
+      li.nav-item {
+        display: block;
+
+        a {
+          color: rgba(255, 255, 255, 0.7);
+          text-transform: capitalize;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          padding: 6px 16px;
+          transition: 0.15s all ease-in;
+
+          // ✅ Responsive font for child nav
+          @include responsive-font(11px, 10px, 9px);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(6px);
+            color: rgba(255, 255, 255, 0.9);
+          }
+
+          &.open,
+          &.router-link-active {
+            color: $primary;
+            .nav-icon {
+              color: $primary;
+            }
+          }
+
+          .nav-icon {
+            font-size: 14px;
+            margin-right: 6px;
+            vertical-align: middle;
+            color: rgba(255, 255, 255, 0.6);
+            flex-shrink: 0;
+
+            @media (max-width: 768px) {
+              font-size: 12px;
+            }
+          }
+
+          .item-name {
+            font-weight: 400;
+          }
+
+          .dd-arrow {
+            margin-left: auto;
+            font-size: 9px;
+            transition: all 0.3s ease-in;
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    width: calc(100% - #{$sidebar-left-width});
+    height: calc(100vh - #{$topbar-height});
+    bottom: 0;
+    right: 0;
+    top: $topbar-height;
+
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    z-index: 88;
+    cursor: w-resize;
+
+    &.open {
+      display: block;
+    }
+    
+    // ✅ Responsive overlay adjustments
+    @media (max-width: 768px) {
+      height: calc(100vh - #{$topbar-height-mobile});
+      top: $topbar-height-mobile;
+    }
+  }
+}
+
+// ✅ Responsive adjustments for different screen sizes
+@media (max-width: 1200px) {
+  .layout-sidebar-large {
+    .sidebar-left {
+      .navigation-left {
+        .nav-item {
+          padding: 3px;
+          
+          .nav-item-hold {
+            padding: 6px 4px;
+            
+            .nav-text {
+              font-size: 11px;
+            }
+            
+            .nav-icon {
+              font-size: 15px;
+            }
+          }
+          
+          &.has-submenu {
+            .inline-submenu {
+              margin: 3px 6px;
+              
+              .nav-item .nav-link {
+                padding: 4px 10px;
+                
+                .item-name {
+                  font-size: 10px;
+                }
+                
+                .nav-icon {
+                  font-size: 11px;
+                  margin-right: 6px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-sidebar-large {
+    .sidebar-left {
+      left: -$sidebar-left-width-mobile; // Hidden off-screen on mobile when closed
+      width: $sidebar-left-width-mobile;
+      
+      &.open {
+        left: 0; // Visible when open on mobile
+      }
+      
+      .navigation-left {
+        .nav-item {
+          padding: 2px;
+          
+          .nav-item-hold {
+            padding: 4px 3px;
+            
+            .nav-text {
+              font-size: 10px;
+            }
+            
+            .nav-icon {
+              font-size: 13px;
+            }
+          }
+          
+          &.has-submenu {
+            .inline-submenu {
+              margin: 2px 4px;
+              
+              .nav-item .nav-link {
+                padding: 3px 8px;
+                
+                .item-name {
+                  font-size: 9px;
+                }
+                
+                .nav-icon {
+                  font-size: 10px;
+                  margin-right: 5px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .layout-sidebar-large {
+    .sidebar-left {
+      .navigation-left {
+        .nav-item {
+          padding: 1px;
+          
+          .nav-item-hold {
+            padding: 3px 2px;
+            
+            .nav-text {
+              font-size: 14px;
+            }
+            
+            .nav-icon {
+              font-size: 14px;
+            }
+          }
+          
+          &.has-submenu {
+            .inline-submenu {
+              margin: 1px 3px;
+              
+              .nav-item .nav-link {
+                padding: 2px 6px;
+                
+                .item-name {
+                  font-size: 8px;
+                }
+                
+                .nav-icon {
+                  font-size: 9px;
+                  margin-right: 4px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // ✅ Ensure main content takes full width on mobile when sidebar is closed
+    .main-content-wrap {
+      width: 100% !important;
+      
+      &.sidenav-open {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+// ✅ Extra small screens (phones in portrait)
+@media (max-width: 480px) {
+  .layout-sidebar-large {
+    .sidebar-left {
+      .navigation-left {
+        .nav-item {
+          padding: 1px;
+          
+          .nav-item-hold {
+            padding: 2px 1px;
+            
+            .nav-text {
+              font-size: 8px;
+            }
+            
+            .nav-icon {
+              font-size: 11px;
+            }
+          }
+          
+          &.has-submenu {
+            .inline-submenu {
+              margin: 1px 2px;
+              
+              .nav-item .nav-link {
+                padding: 1px 4px;
+                
+                .item-name {
+                  font-size: 7px;
+                }
+                
+                .nav-icon {
+                  font-size: 8px;
+                  margin-right: 3px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ✅ Still keep your original @media queries & RTL adjustments untouched

@@ -1,0 +1,34 @@
+# Laravel
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# PHPUnit / coverage
+/.phpunit.cache
+/coverage
+phpunit.xml.bak
+
+# IDE & OS
+.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Optional local tooling
+auth.json
+*.log
